@@ -4,10 +4,15 @@ import profilValidation from "./profilForm.js";
 import { PrismaClient } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import uservalidation from "../clients/validatorsForm.js";
+import { expressjwt } from "express-jwt";
 const router = express.Router();
 const prisma = new PrismaClient();
 import createError from "http-errors";
 
+const auth = expressjwt({
+  secret: process.env["JWT_KEY"],
+  algorithms: ["HS256"],
+});
 
 router.post("/login", async (req, res, next) => {
   let loginData;
@@ -40,7 +45,7 @@ router.post("/login", async (req, res, next) => {
   })
 });
 
-router.patch('/customers/:id', async (req, res, next) => {
+router.patch('/customers/:id',auth, async (req, res, next) => {
   let userData;
   // On vérifie que l'utilisateur est bien le propriétaire du compte qu'il veut modifier
   const userId = parseInt(req.params.id);
