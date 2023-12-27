@@ -62,7 +62,7 @@ router.patch('/customers/:id',auth, async (req, res, next) => {
       return res.status(404).json({ status: 'error', message: 'Utilisateur non trouvé' });
     }
 
-    console.log(userData);
+   
 
     await prisma.user.update({
       where: {
