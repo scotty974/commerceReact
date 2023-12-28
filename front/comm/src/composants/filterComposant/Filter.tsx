@@ -1,5 +1,5 @@
 import { Select,Button } from "@chakra-ui/react";
-import { blue } from "@mui/material/colors";
+
 import { useEffect, useState } from "react";
 
 export default function Filter() {
@@ -15,7 +15,7 @@ const  handleData = async () =>{
 
 useEffect(()=>{
     handleData()
-    console.log(categories)
+   
 },[])
 
 
