@@ -1,3 +1,4 @@
+
 export default function CardProducts({name, price, category, id}) {
   return <>
   <a href={"product/"+id} className=" md:w-1/6 w-1/3 h-full mb-2 hover:cursor-pointer hover:scale-95 transition ease-in-out duration-300" >
