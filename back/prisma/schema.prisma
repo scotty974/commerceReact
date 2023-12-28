@@ -29,7 +29,8 @@ model Products {
   price         Float
   stockQuantity Int
   status        String
-  category      Category[]
+  categoryId Int
+  category      Category @relation(fields: [categoryId],references: [id])
   review Review[]
   orderDetail OrderDetail[]
 }
