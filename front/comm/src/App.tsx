@@ -26,7 +26,7 @@ function App() {
     <Filter />
    <section className='container m-auto w-full mt-10'>
     <div className='flex flex-wrap md:justify-start  md:gap-2 gap-1 justify-center w-full'>
-      {products.map((item,index) => <CardProducts name={item.name} price={item.price} category={item.category.name} key={index}/>)}
+      {products.map((item,index) => <CardProducts name={item.name} price={item.price} category={item.category.name} key={index} id={item.id}/>)}
     
     </div>
    </section>
