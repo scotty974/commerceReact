@@ -79,12 +79,12 @@ export default function Header() {
     }
   };
 
-  useEffect(()=>{
-    const userData = JSON.parse(localStorage.getItem('storedUser'))
-    if(userData){
-      setAccount(userData.email)
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("storedUser"));
+    if (userData) {
+      setAccount(userData.email);
     }
-  },[])
+  }, []);
   return (
     <>
       <nav className="md:container md:m-auto md:pt-2 pl-2 md:pl-0 md:pr-0  pr-2 flex items-start md:items-center justify-between ">
@@ -154,12 +154,12 @@ export default function Header() {
                       />
 
                       {api_way === "register" ? (
-                        <button className="bg-sky-500 text-white p-1 rounded-full w-40 hover:bg-sky-800">
+                        <button className="bg-neutral-950 text-white p-1 rounded-full w-40 ">
                           {" "}
                           S'inscrire
                         </button>
                       ) : (
-                        <button className="bg-sky-500 text-white p-1 rounded-full w-40 hover:bg-sky-800">
+                        <button className="bg-neutral-950 text-white p-1 rounded-full w-40 ">
                           {" "}
                           Se connecter
                         </button>
@@ -182,7 +182,10 @@ export default function Header() {
                     )}
                   </div>
                 ) : (
-                  <p>{account}</p>
+                  <div className="flex flex-col items-center">
+                    <p>{account}</p>
+                    <a href="" className="text-sm bg-neutral-950 p-2 text-white rounded-full mt-4 w-full text-center">Voir le profil</a>
+                  </div>
                 )}
               </PopoverBody>
             </PopoverContent>
