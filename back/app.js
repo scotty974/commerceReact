@@ -5,6 +5,7 @@ import category from "./route/category/category.js"
 import products from './route/products/products.js'
 import orderDetail from './route/orders/orderDetail.js'
 import order from './route/orders/order.js'
+import reviews from './route/reviews/review.js'
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({extended : true}))
@@ -16,6 +17,7 @@ app.use('/', category)
 app.use('/', products)
 app.use('/', orderDetail)
 app.use('/', order)
+app.use('/', reviews)
 
 app.listen(port, ()=>{
     console.log(`App running on : ${port}`)
