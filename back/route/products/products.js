@@ -46,4 +46,18 @@ router.get("/products", async (req, res, next) => {
   }
 });
 
+router.get('/products/:id', async(req,res,next)=>{
+  let productId = parseInt(req.params.id)
+  try{
+    const product = await prisma.products.findFirst({
+      where:{ id : productId},
+      include :{
+        category : {}
+      }
+    })
+    res.json(product)
+  }catch(error){
+    return next(createError(500, "Erreur serveur"));
+  }
+})
 export default router;
