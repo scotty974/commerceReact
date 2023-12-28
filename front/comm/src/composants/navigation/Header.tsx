@@ -16,16 +16,15 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverBody,
-  PopoverFooter,
   PopoverArrow,
   PopoverCloseButton,
-  PopoverAnchor,
 } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Header() {
   const base_url = "http://localhost:8000/";
   const [email, setEmail] = useState("");
+  const [account, setAccount] = useState("");
   const [password, setPassword] = useState("");
   const [api_way, setApiWay] = useState("login");
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -44,8 +43,8 @@ export default function Header() {
     setPassword(event.target.value);
   };
 
-  const handleUser = async (event:any) => {
-    event.preventDefault()
+  const handleUser = async (event: any) => {
+    event.preventDefault();
     try {
       const resp = await fetch(base_url + api_way, {
         method: "POST",
@@ -58,20 +57,37 @@ export default function Header() {
         }),
       });
       if (!resp.ok) {
-        console.log("erreur")
+        console.log("erreur");
         // Faites quelque chose avec les données récupérées
-        
-      } else{
+      } else {
         const data = await resp.json();
-        localStorage.setItem("token", data.token)
+        localStorage.setItem("token", data.token);
+
+        if (data) {
+          const decodedToken = JSON.parse(atob(data.token.split(".")[1]));
+          const email = decodedToken.email;
+          const userId = decodedToken.id;
+          setAccount(email);
+          localStorage.setItem(
+            "storedUser",
+            JSON.stringify({ id: userId, email: email })
+          );
+        }
       }
     } catch (error) {
       console.error("Erreur lors de la requête", error);
     }
   };
+
+  useEffect(()=>{
+    const userData = JSON.parse(localStorage.getItem('storedUser'))
+    if(userData){
+      setAccount(userData.email)
+    }
+  },[])
   return (
     <>
-      <nav className="md:container md:m-auto md:pt-2 pl-2 md:pl-0 md:pr-0  pr-2 flex items-start md:items-center justify-between">
+      <nav className="md:container md:m-auto md:pt-2 pl-2 md:pl-0 md:pr-0  pr-2 flex items-start md:items-center justify-between ">
         <h1 className="text-2xl font-mono">Asphalt</h1>
         <ul className="md:flex">
           <li>
@@ -114,41 +130,60 @@ export default function Header() {
               <PopoverCloseButton />
               <PopoverHeader>Se connecter / S'inscrire</PopoverHeader>
               <PopoverBody>
-                <div className="flex flex-col items-center">
-                  <form className="flex flex-col items-center " onSubmit={handleUser}>
-                    <input
-                      type="text"
-                      placeholder="email"
-                      className="mb-2 text-center"
-                      value={email}
-                      onChange={handleEmail}
-                      required
-                    />
-                    <input
-                      type="password"
-                      placeholder="mot de passe"
-                      className="mb-2 text-center"
-                      value={password}
-                      onChange={handlePassword}
-                      required
-                    />
-                  
-                      {api_way === 'register' ? <button className="bg-sky-500 text-white p-1 rounded-full w-40 hover:bg-sky-800"> S'inscrire</button> : <button className="bg-sky-500 text-white p-1 rounded-full w-40 hover:bg-sky-800"> Se connecter</button>}
-                    
-                  </form>
-                  {api_way === 'login' ?   <button
-                    className="text-center text-sm underline my-2 text-cyan-500"
-                    onClick={handleRegister}
-                  >
-                    Pas encore de compte ?{" "}
-                  </button> :   <button
-                    className="text-center text-sm underline my-2 text-cyan-500"
-                    onClick={handleLogin}
-                  >
-                    Déjà un compte ? {" "}
-                  </button>}
-                
-                </div>
+                {!localStorage.getItem("token") ? (
+                  <div className="flex flex-col items-center">
+                    <form
+                      className="flex flex-col items-center "
+                      onSubmit={handleUser}
+                    >
+                      <input
+                        type="text"
+                        placeholder="email"
+                        className="mb-2 text-center"
+                        value={email}
+                        onChange={handleEmail}
+                        required
+                      />
+                      <input
+                        type="password"
+                        placeholder="mot de passe"
+                        className="mb-2 text-center"
+                        value={password}
+                        onChange={handlePassword}
+                        required
+                      />
+
+                      {api_way === "register" ? (
+                        <button className="bg-sky-500 text-white p-1 rounded-full w-40 hover:bg-sky-800">
+                          {" "}
+                          S'inscrire
+                        </button>
+                      ) : (
+                        <button className="bg-sky-500 text-white p-1 rounded-full w-40 hover:bg-sky-800">
+                          {" "}
+                          Se connecter
+                        </button>
+                      )}
+                    </form>
+                    {api_way === "login" ? (
+                      <button
+                        className="text-center text-sm underline my-2 text-cyan-500"
+                        onClick={handleRegister}
+                      >
+                        Pas encore de compte ?{" "}
+                      </button>
+                    ) : (
+                      <button
+                        className="text-center text-sm underline my-2 text-cyan-500"
+                        onClick={handleLogin}
+                      >
+                        Déjà un compte ?{" "}
+                      </button>
+                    )}
+                  </div>
+                ) : (
+                  <p>{account}</p>
+                )}
               </PopoverBody>
             </PopoverContent>
           </Popover>

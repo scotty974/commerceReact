@@ -19,7 +19,7 @@ useEffect(()=>{
 },[])
 
 
-const lists = categories.map(item => <li className="mx-2"><Button fontSize={14} size='sm'>{item.name}</Button></li>)
+const lists = categories.map((item,index) => <li className="mx-2" key={index}><Button fontSize={14} size='sm'>{item.name}</Button></li>)
   return (
     <>
       <section className="container m-auto mt-4 px-2 md:px-0">
