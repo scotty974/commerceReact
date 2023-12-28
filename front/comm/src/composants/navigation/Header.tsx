@@ -7,7 +7,7 @@ export default function Header() {
           <li>
             <a
               href=""
-              className="hover:bg-slate-100 p-2 rounded-full text-sky-800 font-semibold font-mono"
+              className="hover:bg-slate-100 p-2 rounded-full text-neutral-900 font-semibold "
             >
               Vêtements
             </a>
@@ -15,7 +15,7 @@ export default function Header() {
           <li>
             <a
               href=""
-              className="hover:bg-slate-100 p-2 rounded-full text-sky-800 font-semibold font-mono"
+              className="hover:bg-slate-100 p-2 rounded-full text-neutral-9000 font-semibold "
             >
               Nouveautés
             </a>
@@ -23,7 +23,7 @@ export default function Header() {
           <li>
             <a
               href=""
-              className="hover:bg-slate-100 p-2 rounded-full text-sky-800 font-semibold font-mono"
+              className="hover:bg-slate-100 p-2 rounded-full text-neutral-900 font-semibold "
             >
               Contacts
             </a>
