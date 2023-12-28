@@ -88,7 +88,7 @@ export default function Header() {
   return (
     <>
       <nav className="md:container md:m-auto md:pt-2 pl-2 md:pl-0 md:pr-0  pr-2 flex items-start md:items-center justify-between ">
-        <h1 className="text-2xl font-mono">Asphalt</h1>
+        <h1 className="text-2xl font-mono"><a href="/">Asphalt</a></h1>
         <ul className="md:flex">
           <li>
             <a
