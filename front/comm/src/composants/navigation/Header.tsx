@@ -8,7 +8,6 @@ import {
   DrawerContent,
   DrawerCloseButton,
   useDisclosure,
-  Button,
 } from "@chakra-ui/react";
 import {
   Popover,
@@ -82,17 +81,25 @@ export default function Header() {
   };
 
   const handleOrder = async () => {
-    const resp = await fetch(base_url + "order", { 
-    method: "GET", 
-    headers : {
-      'Accept': 'application/json',
-      'Content-Type': "application/json",
-      'Authorization' : `Bearer ${localStorage.getItem('token')}`
-    } });
-    const data = await resp.json();
-   
-    setOrders(data);
-  
+    try {
+      const resp = await fetch(base_url + "order", {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      if (!resp.ok) {
+        console.error("Erreur lors de la récupération des commandes.");
+        return;
+      }
+
+      const data = await resp.json();
+      setOrders(data);
+    } catch (error) {
+      console.error("Erreur lors de la requête", error);
+    }
   };
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("storedUser"));
@@ -100,7 +107,6 @@ export default function Header() {
       setAccount(userData.email);
     }
     handleOrder();
-    
   }, []);
   return (
     <>
@@ -228,14 +234,29 @@ export default function Header() {
           <DrawerHeader>Votre Panier</DrawerHeader>
 
           <DrawerBody>
-            {orders.map((item,index)=>
-              <BagCard orderdetail={item.orderdetail[0]} key={index}/>
+            {orders.length === 0 ? (
+              <p>Votre panier est vide.</p>
+            ) : (
+              orders.map(
+                (item, index) =>
+                  item.orderdetail.length > 0 &&
+                  item.orderdetail.map(
+                    (orderDetailItem: any, orderDetailIndex: any) => (
+                      <BagCard
+                        key={`${index}-${orderDetailIndex}`}
+                        orderdetail={orderDetailItem}
+                        
+                      />
+                    )
+                  )
+              )
             )}
-          
           </DrawerBody>
 
           <DrawerFooter>
-            <button className="bg-neutral-900 w-full p-2 text-white rounded-full">Commander</button>
+            <button className="bg-neutral-900 w-full p-2 text-white rounded-full">
+              Commander
+            </button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
