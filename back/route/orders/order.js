@@ -35,7 +35,11 @@ router.get('/order', auth, async(req,res,next)=>{
     try{
         const orders = await prisma.order.findMany({
             include : {
-                orderdetail : {}
+                orderdetail : {
+                    include : {
+                        product : {}
+                    }
+                }
             }
         })
         res.json(orders)

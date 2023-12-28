@@ -25,11 +25,42 @@ router.post('/order-detail', auth, async(req,res,next)=>{
             productId : orderDetailData.productId,
             quantity : orderDetailData.quantity,
             unitPriceAtOrder : orderDetailData.total
-        }
+            
+        },
+
+        
     })
     return res.status(200).json({ status: 'success', message: 'Ajout au panier' });
 })
 
+router.delete('/order-detail/:id', auth, async (req, res, next) => {
+const orderDetailId = parseInt(req.params.id)
+
+    try {
+        // Vérifiez si l'OrderDetail existe
+        const existingOrderDetail = await prisma.orderDetail.findUnique({
+            where: {
+                id: parseInt(orderDetailId),
+            },
+        });
+
+        if (!existingOrderDetail) {
+            return next(createError.NotFound('OrderDetail introuvable'));
+        }
+
+        // Supprimez l'OrderDetail
+        await prisma.orderDetail.delete({
+            where: {
+                id: parseInt(orderDetailId),
+            },
+        });
+
+        return res.status(200).json({ status: 'success', message: 'OrderDetail supprimé avec succès' });
+    } catch (error) {
+        console.error(error);
+        return next(createError.InternalServerError('Erreur lors de la suppression de l\'OrderDetail'));
+    }
+});
 
 
 
