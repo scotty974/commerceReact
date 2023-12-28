@@ -20,6 +20,7 @@ import {
   PopoverCloseButton,
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
+import BagCard from "../bagCard/BagCard";
 
 export default function Header() {
   const base_url = "http://localhost:8000/";
@@ -27,6 +28,7 @@ export default function Header() {
   const [account, setAccount] = useState("");
   const [password, setPassword] = useState("");
   const [api_way, setApiWay] = useState("login");
+  const [orders, setOrders] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef();
 
@@ -79,16 +81,33 @@ export default function Header() {
     }
   };
 
+  const handleOrder = async () => {
+    const resp = await fetch(base_url + "order", { 
+    method: "GET", 
+    headers : {
+      'Accept': 'application/json',
+      'Content-Type': "application/json",
+      'Authorization' : `Bearer ${localStorage.getItem('token')}`
+    } });
+    const data = await resp.json();
+   
+    setOrders(data);
+  
+  };
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("storedUser"));
     if (userData) {
       setAccount(userData.email);
     }
+    handleOrder();
+    
   }, []);
   return (
     <>
       <nav className="md:container md:m-auto md:pt-2 pl-2 md:pl-0 md:pr-0  pr-2 flex items-start md:items-center justify-between ">
-        <h1 className="text-2xl font-mono"><a href="/">Asphalt</a></h1>
+        <h1 className="text-2xl font-mono">
+          <a href="/">Asphalt</a>
+        </h1>
         <ul className="md:flex">
           <li>
             <a
@@ -184,7 +203,12 @@ export default function Header() {
                 ) : (
                   <div className="flex flex-col items-center">
                     <p>{account}</p>
-                    <a href="" className="text-sm bg-neutral-950 p-2 text-white rounded-full mt-4 w-full text-center">Voir le profil</a>
+                    <a
+                      href=""
+                      className="text-sm bg-neutral-950 p-2 text-white rounded-full mt-4 w-full text-center"
+                    >
+                      Voir le profil
+                    </a>
                   </div>
                 )}
               </PopoverBody>
@@ -204,14 +228,14 @@ export default function Header() {
           <DrawerHeader>Votre Panier</DrawerHeader>
 
           <DrawerBody>
-            <h1>ehy</h1>
+            {orders.map((item,index)=>
+              <BagCard orderdetail={item.orderdetail[0]} key={index}/>
+            )}
+          
           </DrawerBody>
 
           <DrawerFooter>
-            <Button variant="outline" mr={3} onClick={onClose}>
-              Cancel
-            </Button>
-            <Button colorScheme="blue">Save</Button>
+            <button className="bg-neutral-900 w-full p-2 text-white rounded-full">Commander</button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
