@@ -52,7 +52,8 @@ router.get('/products/:id', async(req,res,next)=>{
     const product = await prisma.products.findFirst({
       where:{ id : productId},
       include :{
-        category : {}
+        category : {},
+        review :{}
       }
     })
     res.json(product)
