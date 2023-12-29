@@ -71,9 +71,9 @@ export default function Product() {
   return (
     <>
       <Header />
-      <section className="container m-auto flex mt-4">
-        <div className="bg-neutral-900 w-1/2 h-bannerHeight  "></div>
-        <div className="ml-10 w-1/2 flex flex-col justify-center ">
+      <section className="container m-auto flex flex-col md:flex-row mt-4">
+        <div className="bg-neutral-900 md:w-1/2 w-full h-bannerHeight  "></div>
+        <div className="md:ml-10 mx-2 md:w-1/2 w-full flex flex-col md:justify-center ">
           
           <h1 className="text-5xl font-bold ">{name}</h1>
           <p className="text-2xl mt-2">
@@ -97,7 +97,7 @@ export default function Product() {
           
           <button
             onClick={handleOrder}
-            className="bg-neutral-900 text-white p-2 w-96 mt-10 rounded-full"
+            className="bg-neutral-900 text-white p-2 md:w-96 w-56 mt-10 rounded-full"
             
           >
             Ajouter à mon panier
