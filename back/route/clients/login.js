@@ -16,42 +16,57 @@ const auth = expressjwt({
 
 router.post("/login", async (req, res, next) => {
   let loginData;
-  try{
-    loginData =  uservalidation.parse(req.body);
+  try {
+    loginData = uservalidation.parse(req.body);
   } catch (error) {
     return res.status(400).json({ errors: error.issues });
   }
 
   const user = await prisma.user.findFirst({
-    where:{
-        email:loginData.email
-    }
-  })
+    where: {
+      email: loginData.email,
+    },
+    include: {
+      order: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  });
 
-  if(!user) return next(createError(403, "Mauvais mot de passe/email"))
+  if (!user) return next(createError(403, "Mauvais mot de passe/email"));
 
-  const passwordIsGood = await bcrypt.compare(loginData.password, user.password)
+  const passwordIsGood = await bcrypt.compare(
+    loginData.password,
+    user.password
+  );
 
-  if(!passwordIsGood) return next(createError(403, "Mauvais mot de passe/email"))
+  if (!passwordIsGood)
+    return next(createError(403, "Mauvais mot de passe/email"));
 
   res.json({
-    token : jwt.sign({
-        id : user.id,
-        email: user.email
-    },
-    process.env["JWT_KEY"], {
-        expiresIn : 86400,
-    })
-  })
+    token: jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+        order : user.order
+      },
+      process.env["JWT_KEY"],
+      {
+        expiresIn: 86400,
+      }
+    ),
+  });
 });
 
-router.patch('/customers/:id',auth, async (req, res, next) => {
+router.patch("/customers/:id", auth, async (req, res, next) => {
   let userData;
   // On vérifie que l'utilisateur est bien le propriétaire du compte qu'il veut modifier
   const userId = parseInt(req.params.id);
 
   try {
-    userData =  profilValidation.parse(req.body);
+    userData = profilValidation.parse(req.body);
     const user = await prisma.user.findFirst({
       where: {
         id: userId,
@@ -59,10 +74,10 @@ router.patch('/customers/:id',auth, async (req, res, next) => {
     });
 
     if (!user) {
-      return res.status(404).json({ status: 'error', message: 'Utilisateur non trouvé' });
+      return res
+        .status(404)
+        .json({ status: "error", message: "Utilisateur non trouvé" });
     }
-
-   
 
     await prisma.user.update({
       where: {
@@ -76,12 +91,18 @@ router.patch('/customers/:id',auth, async (req, res, next) => {
       },
     });
 
-    return res.status(200).json({ status: 'success', message: 'Profil mis à jour avec succès' });
+    return res
+      .status(200)
+      .json({ status: "success", message: "Profil mis à jour avec succès" });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ status: 'error', message: 'Une erreur est survenue lors de la mise à jour du profil' });
+    return res
+      .status(500)
+      .json({
+        status: "error",
+        message: "Une erreur est survenue lors de la mise à jour du profil",
+      });
   }
 });
 
-
-export default router
+export default router;
