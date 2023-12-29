@@ -36,7 +36,7 @@ export default function BagCard({ orderdetail, onUpdateCart }) {
         <span>x{orderdetail.quantity}</span>
         <span>{orderdetail.unitPriceAtOrder} €</span>
       </div>
-      <button onClick={() => deleteOrderDetail(orderdetail.id)}>
+      <button onClick={() => deleteOrderDetail(orderdetail.id)} className="hover:bg-red-600 hover:text-white p-2 rounded-full">
         <Trash size={16} />
       </button>
     </div>
