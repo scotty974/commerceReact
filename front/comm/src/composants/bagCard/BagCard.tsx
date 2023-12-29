@@ -1,19 +1,31 @@
 import { Trash } from "lucide-react";
+import { useEffect } from "react";
 
-
-export default function BagCard({ orderdetail }) {
+export default function BagCard({ orderdetail, onUpdateCart }) {
   const base_url = "http://localhost:8000/";
 
   const deleteOrderDetail = async (orderId: number) => {
-    await fetch(base_url + "order-detail/" + orderId, {
-      method: "DELETE",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
+    try {
+      await fetch(base_url + "order-detail/" + orderId, {
+        method: "DELETE",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      // Appeler la fonction parent pour informer la suppression
+      onUpdateCart();
+    } catch (error) {
+      console.error("Erreur lors de la suppression de la commande", error);
+    }
   };
+
+  // Utiliser useEffect pour détecter les changements dans orderdetail et appeler onUpdateCart
+  useEffect(() => {
+    onUpdateCart();
+  }, [orderdetail, onUpdateCart]);
 
   return (
     <div className="flex items-center justify-between gap-1 mb-2">

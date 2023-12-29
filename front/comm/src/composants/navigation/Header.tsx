@@ -259,7 +259,7 @@ export default function Header() {
                       <BagCard
                         key={`${index}-${orderDetailIndex}`}
                         orderdetail={orderDetailItem}
-                        
+                        onUpdateCart={handleOrder}
                       />
                     )
                   )
