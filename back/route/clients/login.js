@@ -25,6 +25,11 @@ router.post("/login", async (req, res, next) => {
   const user = await prisma.user.findFirst({
     where:{
         email:loginData.email
+        
+    },include : {
+      order : {select : {
+        id : true
+      }}
     }
   })
 
@@ -37,7 +42,8 @@ router.post("/login", async (req, res, next) => {
   res.json({
     token : jwt.sign({
         id : user.id,
-        email: user.email
+        email: user.email,
+      order : user.order
     },
     process.env["JWT_KEY"], {
         expiresIn : 86400,
