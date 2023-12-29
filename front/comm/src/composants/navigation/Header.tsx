@@ -68,10 +68,11 @@ export default function Header() {
           const decodedToken = JSON.parse(atob(data.token.split(".")[1]));
           const email = decodedToken.email;
           const userId = decodedToken.id;
+          const orderId = decodedToken.order[0].id
           setAccount(email);
           localStorage.setItem(
             "storedUser",
-            JSON.stringify({ id: userId, email: email })
+            JSON.stringify({ id: userId, email: email, order : orderId })
           );
         }
       }
