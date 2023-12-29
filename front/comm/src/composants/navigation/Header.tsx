@@ -28,6 +28,7 @@ export default function Header() {
   const [password, setPassword] = useState("");
   const [api_way, setApiWay] = useState("login");
   const [orders, setOrders] = useState([]);
+  const [totalCost, setTotalCost] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef();
 
@@ -80,7 +81,17 @@ export default function Header() {
       console.error("Erreur lors de la requête", error);
     }
   };
-
+  const calculateTotalCost = (orders) => {
+    return orders.reduce((acc, order) => {
+      return (
+        acc +
+        order.orderdetail.reduce((accDetail, detail) => {
+          return accDetail + detail.unitPriceAtOrder;
+        }, 0)
+      );
+    }, 0);
+  };
+  
   const handleOrder = async () => {
     try {
       const resp = await fetch(base_url + "order", {
@@ -98,6 +109,8 @@ export default function Header() {
 
       const data = await resp.json();
       setOrders(data);
+      const newTotalCost = calculateTotalCost(data);
+      setTotalCost(newTotalCost);
     } catch (error) {
       console.error("Erreur lors de la requête", error);
     }
@@ -255,9 +268,13 @@ export default function Header() {
           </DrawerBody>
 
           <DrawerFooter>
+            <div className="w-full">
+              <p className="mb-6"><strong className="text-lg">Total</strong> : {totalCost} €</p>
             <button className="bg-neutral-900 w-full p-2 text-white rounded-full">
               Commander
             </button>
+            </div>
+           
           </DrawerFooter>
         </DrawerContent>
       </Drawer>

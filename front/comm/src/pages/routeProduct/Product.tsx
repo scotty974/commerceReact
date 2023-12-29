@@ -94,7 +94,7 @@ export default function Product() {
               <NumberDecrementStepper />
             </NumberInputStepper>
           </NumberInput>
-          <p className="mt-2">Prix total: {totalPrice} €</p>
+          
           <button
             onClick={handleOrder}
             className="bg-neutral-900 text-white p-2 w-96 mt-10 rounded-full"

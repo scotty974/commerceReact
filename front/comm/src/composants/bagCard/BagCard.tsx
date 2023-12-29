@@ -1,19 +1,18 @@
-import { Trash } from 'lucide-react';
+import { Trash } from "lucide-react";
+
 
 export default function BagCard({ orderdetail }) {
   const base_url = "http://localhost:8000/";
 
-  const deleteOrderDetail = async (orderId:number) => {
-    await fetch(base_url + 'order-detail/' + orderId, {
+  const deleteOrderDetail = async (orderId: number) => {
+    await fetch(base_url + "order-detail/" + orderId, {
       method: "DELETE",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-      
     });
-    
   };
 
   return (
@@ -23,7 +22,7 @@ export default function BagCard({ orderdetail }) {
       <div className="flex flex-col ">
         <h3 className="font-bold text-sm w-32">{orderdetail.product.name}</h3>
         <span>x{orderdetail.quantity}</span>
-        <span>{orderdetail.product.price} €</span>
+        <span>{orderdetail.unitPriceAtOrder} €</span>
       </div>
       <button onClick={() => deleteOrderDetail(orderdetail.id)}>
         <Trash size={16} />
