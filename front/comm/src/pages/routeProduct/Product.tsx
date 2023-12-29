@@ -35,28 +35,37 @@ export default function Product() {
 
   useEffect(() => {
     // Met à jour le prix total chaque fois que la quantité change
-    setTotalPrice(price + price);
-  }, [quantity, price]);
-
-  const handleChangeQuantity = (value: number) => {
-    setQuantity(value);
+    setTotalPrice(price * quantity);
+    
+  }, [quantity,price]);
+  
+  const handleChangeQuantity = (value:string) => {
+    const valueChange = parseInt(value)
+    setQuantity(valueChange);
   };
 
   const handleOrder = async () => {
-    const resp = await fetch(base_url + "order-detail", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify({
-        orderId: userData.order,
-        productId: id,
-        quantity: quantity,
-        total : totalPrice
-      }),
-    });
+    try{
+      const resp = await fetch(base_url + "order-detail", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          orderId: userData.order,
+          productId: id,
+          quantity: quantity,
+          total : totalPrice
+        }),
+      });
+      
+    }catch(error){
+      console.log({message : error})
+      
+    }
+    
   };
 
   return (
